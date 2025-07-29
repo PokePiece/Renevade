@@ -50,8 +50,10 @@ export default function Avatar({
             const dx = e.clientX - mousePos.current.x;
             const dy = e.clientY - mousePos.current.y;
             mousePos.current = { x: e.clientX, y: e.clientY };
-            yaw.current -= dx * 0.002;
-            pitch.current -= dy * 0.002;
+            const sensitivity = 0.005; // Adjust this value higher for more sensitivity
+            yaw.current -= dx * sensitivity;
+            pitch.current -= dy * sensitivity;
+
             pitch.current = Math.max(-Math.PI / 2 + 0.1, Math.min(Math.PI / 2 - 0.1, pitch.current)); // clamp
         };
 

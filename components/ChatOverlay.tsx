@@ -9,10 +9,11 @@ type ChatOverlayProps = {
     setIsChatting: (value: boolean) => void
     onUserMessage: (msg: any) => void
     onAiMessage: (msg: any) => void
+    tag: string
 }
 
 
-export default function ChatOverlay({ isChatting, setIsChatting, onUserMessage, onAiMessage }: ChatOverlayProps) {
+export default function ChatOverlay({ isChatting, setIsChatting, onUserMessage, onAiMessage, tag }: ChatOverlayProps) {
     const [messages, setMessages] = useState<string[]>([])
 
     const handleKeyDown = async (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -30,7 +31,7 @@ export default function ChatOverlay({ isChatting, setIsChatting, onUserMessage, 
         setMessages(prev => [...prev, `User: ${text}`])
         onUserMessage(text)
 
-        const response = await fetchChatResponse(text)
+        const response = await fetchChatResponse(text, tag)
         setMessages(prev => [...prev, `Sur: ${response}`])
         onAiMessage(response)
     }

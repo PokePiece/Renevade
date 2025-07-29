@@ -13,11 +13,16 @@ import SurAvatar from './SurAvatar';
 import ChatOverlay from './ChatOverlay';
 import { Text } from '@react-three/drei'
 import InfoText from './InfoText';
+import CoolText from './CoolText';
+import { fetchChatResponse } from '@/lib/fetchChatResponse';
+import House from './House';
+import Computer from './Computer';
+import Report from './Report';
 
 
 export default function CanvasWrapper() {
 
-    const [avatarPos, setAvatarPos] = useState<[number, number, number]>([0, 0, 0]);
+    const [avatarPos, setAvatarPos] = useState<[number, number, number]>([4, 0, 13]);
     const [controlMode, setControlMode] = useState<'avatar' | 'free' | 'freehidden'>('avatar');
     const [isChatting, setIsChatting] = useState(false)
     const [chatActive, setChatActive] = useState(false)
@@ -28,7 +33,7 @@ export default function CanvasWrapper() {
 
     const [followingSur, setFollowingSur] = useState(false);
     const lastSurPos = useRef<[number, number, number]>([avatarPos[0] - 1, avatarPos[1], avatarPos[2] - 1])
-    const [surPos, setSurPos] = useState<[number, number, number]>([0, 0, -3])
+    const [surPos, setSurPos] = useState<[number, number, number]>([3, 0, 5.1])
 
     const [showRift, setShowRift] = useState<boolean>(true);
 
@@ -76,6 +81,8 @@ export default function CanvasWrapper() {
     }
 
 
+
+
     return (
         <>
             <Canvas
@@ -85,7 +92,7 @@ export default function CanvasWrapper() {
             >
                 <mesh rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
                     <planeGeometry args={[500, 500]} />
-                    <meshStandardMaterial color="#aaa" />
+                    <meshStandardMaterial color="green" />
                 </mesh>
 
                 {(controlMode === 'free' || controlMode === 'freehidden') && <BasicMovement />}
@@ -102,7 +109,10 @@ export default function CanvasWrapper() {
                     <boxGeometry args={[10, 5, 1]} />
                     <meshStandardMaterial color="#999" />
                 </mesh>
-
+                <CoolText />
+                <Computer />
+                <House />
+                <Report />
                 <Sky
                     distance={450000}
                     sunPosition={[0, 1, 0]}
@@ -182,6 +192,7 @@ export default function CanvasWrapper() {
             {chatActive && (
                 <ChatOverlay
                     isChatting={isChatting}
+                    tag='webtrix_general'
                     setIsChatting={setIsChatting}
                     onUserMessage={(msg) => {
                         setAvatarSpeech(msg);

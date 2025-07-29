@@ -1,5 +1,5 @@
-export async function fetchChatResponse(prompt: string): Promise<string> {
-    const payload = JSON.stringify({ prompt, max_tokens: 1000, tag: 'webtrix_general' });
+export async function fetchChatResponse(prompt: string, tag: string): Promise<string> {
+    const payload = JSON.stringify({ prompt, max_tokens: 1000, tag: tag });
 
     let ok = false;
     try {

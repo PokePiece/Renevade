@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "DC Webspace",
+  title: "Renevade",
   description: "Webspace of the future.",
 };
 
