@@ -1,5 +1,5 @@
 'use client';
-import { Canvas, useFrame } from '@react-three/fiber';
+import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { Html, OrbitControls } from '@react-three/drei';
 import { Suspense, useEffect, useRef, useState } from 'react';
 import ClickableNode from './ClickableNode';
@@ -9,7 +9,7 @@ import Link from 'next/link';
 import { Sky } from '@react-three/drei';
 import BasicMovement from '@/components/BasicMovement'
 import Avatar from '@/components/Avatar'
-import SurAvatar from './SurAvatar';
+import SurrealAvatar from './SurrealAvatar';
 import ChatOverlay from './ChatOverlay';
 import { Text } from '@react-three/drei'
 import InfoText from './InfoText';
@@ -18,6 +18,10 @@ import { fetchChatResponse } from '@/lib/fetchChatResponse';
 import House from './House';
 import Computer from './Computer';
 import Report from './Report';
+import CapitalBuilding from './objects/CapitalBuilding';
+import VoidTerminal from './objects/VoidTerminal';
+import CoreOverlays from './CoreOverlays';
+import InfoOverlays from './InfoOverlay';
 
 
 export default function CanvasWrapper() {
@@ -28,20 +32,32 @@ export default function CanvasWrapper() {
     const [chatActive, setChatActive] = useState(false)
 
     const [avatarSpeech, setAvatarSpeech] = useState<string | null>(null);
-    const [surSpeech, setSurSpeech] = useState<string | null>(null);
+    const [surrealSpeech, setSurrealSpeech] = useState<string | null>(null);
 
 
-    const [followingSur, setFollowingSur] = useState(false);
-    const lastSurPos = useRef<[number, number, number]>([avatarPos[0] - 1, avatarPos[1], avatarPos[2] - 1])
-    const [surPos, setSurPos] = useState<[number, number, number]>([3, 0, 5.1])
+    const [followingSurreal, setFollowingSurreal] = useState(false);
+    const lastSurrealPos = useRef<[number, number, number]>([avatarPos[0] - 1, avatarPos[1], avatarPos[2] - 1])
+    const [surrealPos, setSurrealPos] = useState<[number, number, number]>([3, 0, 5.1])
 
     const [showRift, setShowRift] = useState<boolean>(true);
 
+    const [showVoidOverlay, setShowVoidOverlay] = useState<boolean>(false);
+    const [showHumanAGI, setShowHumanAGI] = useState<boolean>(false)
+
+    const [showVoidInfo, setShowVoidInfo] = useState<boolean>(false);
+    const [showHumanAGIInfo, setShowHumanAGIInfo] = useState<boolean>(false);
+
+    const [playMusic, setPlayMusic] = useState<boolean>(false);
+    const [showMusicInfo, setShowMusicInfo] = useState<boolean>(false)
+
+    const [showSurrealInfo, setShowSurrealInfo] = useState<boolean>(false);
+    const [showPlayerInfo, setShowPlayerInfo] = useState<boolean>(false)
+
     useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent) => {
-            if (e.key === 'Escape') setControlMode('free');
-            if (e.key.toLowerCase() === 'x') setControlMode('avatar');
-            if (e.key === 'Tab') setControlMode('freehidden')
+            if (e.key === 'f' && !isChatting) setControlMode('free');
+            if (e.key.toLowerCase() === 'x' && !isChatting) setControlMode('avatar');
+            if (e.key === 'Tab' && !isChatting) setControlMode('freehidden')
             if (e.key === 'c' && !isChatting) {
                 setChatActive(prev => !prev)
             }
@@ -50,13 +66,19 @@ export default function CanvasWrapper() {
         return () => window.removeEventListener('keydown', handleKeyDown);
     }, [isChatting]);
 
-    if (followingSur) {
-        lastSurPos.current = [avatarPos[0], avatarPos[1], avatarPos[2] - 5]
+    if (followingSurreal) {
+        lastSurrealPos.current = [avatarPos[0], avatarPos[1], avatarPos[2] - 5]
     }
 
-    function SurFollower() {
+    useEffect(() => {
+        const disableContextMenu = (e: MouseEvent) => e.preventDefault();
+        window.addEventListener('contextmenu', disableContextMenu);
+        return () => window.removeEventListener('contextmenu', disableContextMenu);
+    }, []);
+
+    function SurrealFollower() {
         useFrame(() => {
-            if (!followingSur) return;
+            if (!followingSurreal) return;
 
             const target: [number, number, number] = [
                 avatarPos[0] + 2,
@@ -65,7 +87,7 @@ export default function CanvasWrapper() {
             ];
             const speed = 0.05;
 
-            setSurPos(([x, y, z]) => [
+            setSurrealPos(([x, y, z]) => [
                 x + (target[0] - x) * speed,
                 y + (target[1] - y) * speed,
                 z + (target[2] - z) * speed,
@@ -83,6 +105,10 @@ export default function CanvasWrapper() {
 
 
 
+
+
+
+
     return (
         <>
             <Canvas
@@ -90,6 +116,7 @@ export default function CanvasWrapper() {
                 camera={{ position: [0, 3, 10], fov: 75 }}
                 style={{ width: '100%', height: '100%' }}
             >
+
                 <mesh rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
                     <planeGeometry args={[500, 500]} />
                     <meshStandardMaterial color="green" />
@@ -102,6 +129,7 @@ export default function CanvasWrapper() {
                         setAvatarPos={setAvatarPos}
                         active={controlMode === 'avatar' && !isChatting}
                         text={avatarSpeech}
+                        onContextMenu={() => setShowPlayerInfo(prev => !prev)}
                     />
                 )}
 
@@ -110,9 +138,11 @@ export default function CanvasWrapper() {
                     <meshStandardMaterial color="#999" />
                 </mesh>
                 <CoolText />
-                <Computer />
+                <Computer showHumanAGIInfo={showHumanAGIInfo} setShowHumanAGIInfo={setShowHumanAGIInfo} showHumanAGIOverlay={showHumanAGI} setShowHumanAGIOverlay={setShowHumanAGI} />
                 <House />
                 <Report />
+                <CapitalBuilding />
+                <VoidTerminal setIsChatting={setIsChatting} setShowVoidInfo={setShowVoidInfo} showVoidOverlay={showVoidOverlay} setShowVoidOverlay={setShowVoidOverlay} />
                 <Sky
                     distance={450000}
                     sunPosition={[0, 1, 0]}
@@ -138,7 +168,10 @@ export default function CanvasWrapper() {
 
 
 
-                    <mesh position={new THREE.Vector3(0, 1, 0)}>
+                    <mesh position={new THREE.Vector3(0, 1, 0)}
+                        onClick={() => setPlayMusic(prev => !prev)}
+                        onContextMenu={() => setShowMusicInfo(prev => !prev)}
+                    >
                         <boxGeometry />
                         <meshStandardMaterial color="#0077ff" />
                     </mesh>
@@ -177,18 +210,39 @@ export default function CanvasWrapper() {
 
 
                 }
+                
 
-
-                <SurAvatar
-                    position={surPos}
-                    active={followingSur}
-                    onClick={() => setFollowingSur(!followingSur)}
-                    text={surSpeech}
+                <SurrealAvatar
+                    position={surrealPos}
+                    active={followingSurreal}
+                    onClick={() => setFollowingSurreal(!followingSurreal)}
+                    text={surrealSpeech}
+                    onContextMenu ={() => setShowSurrealInfo(prev => !prev)}
                 />
-                <SurFollower />
+                <SurrealFollower />
                 <InfoText />
 
             </Canvas>
+            {playMusic && <audio src='/marling1.mp3' autoPlay />}
+            <CoreOverlays
+                showVoidOverlay={showVoidOverlay}
+                setShowVoidOverlay={setShowVoidOverlay}
+                showHumanAGIOverlay={showHumanAGI}
+                setShowHumanAGIOverlay={setShowHumanAGI}
+                setIsChatting={setIsChatting}
+            />
+            <InfoOverlays
+                showVoidInfo={showVoidInfo}
+                setShowVoidInfo={setShowVoidInfo}
+                showHumanAGIInfo={showHumanAGIInfo}
+                setShowHumanAGIInfo={setShowHumanAGIInfo}
+                showMusicInfo={showMusicInfo}
+                setShowMusicInfo={setShowMusicInfo}
+                showSurrealInfo={showSurrealInfo}
+                setShowSurrealInfo={setShowSurrealInfo}
+                showPlayerInfo={showPlayerInfo}
+                setShowPlayerInfo={setShowPlayerInfo}
+            />
             {chatActive && (
                 <ChatOverlay
                     isChatting={isChatting}
@@ -199,8 +253,8 @@ export default function CanvasWrapper() {
                         setTimeout(() => setAvatarSpeech(null), 3000);
                     }}
                     onAiMessage={(msg) => {
-                        setSurSpeech(msg);
-                        setTimeout(() => setSurSpeech(null), 3000);
+                        setSurrealSpeech(msg);
+                        setTimeout(() => setSurrealSpeech(null), 3000);
                     }}
                 />
             )}

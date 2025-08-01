@@ -15,9 +15,6 @@ export default function InfoText() {
                     color="black"
                     anchorX="center"
                     anchorY="middle"
-                    onClick={() => window.open('https://dilloncarey.com')}
-                    onPointerOver={(e) => (document.body.style.cursor = 'pointer')}
-                    onPointerOut={(e) => (document.body.style.cursor = 'default')}
                 >
                     Renevade
                 </Text>
@@ -45,3 +42,12 @@ export default function InfoText() {
         </Suspense >
     )
 }
+
+
+
+
+
+
+// onPointerOver={(e) => (document.body.style.cursor = 'pointer')}
+// onPointerOut={(e) => (document.body.style.cursor = 'default')}
+// onClick={() => window.open('https://localhost)} 

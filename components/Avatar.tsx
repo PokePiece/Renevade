@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
 import * as THREE from 'three';
 import FloatingText from './FloatingText';
@@ -6,13 +6,15 @@ import FloatingText from './FloatingText';
 export default function Avatar({
     position,
     setAvatarPos,
-    active, // new prop
+    active,
     text,
+    onContextMenu,
 }: {
     position: [number, number, number];
     setAvatarPos: (pos: [number, number, number]) => void;
-    active: boolean; // or use a string like 'avatar' | 'free'
+    active: boolean;
     text: string | null;
+    onContextMenu: React.Dispatch<React.SetStateAction<boolean>>
 }) {
     const avatarRef = useRef<THREE.Group>(null);
     const keys = useRef({ w: false, a: false, s: false, d: false });
@@ -50,7 +52,7 @@ export default function Avatar({
             const dx = e.clientX - mousePos.current.x;
             const dy = e.clientY - mousePos.current.y;
             mousePos.current = { x: e.clientX, y: e.clientY };
-            const sensitivity = 0.005; // Adjust this value higher for more sensitivity
+            const sensitivity = 0.005;
             yaw.current -= dx * sensitivity;
             pitch.current -= dy * sensitivity;
 
@@ -100,11 +102,10 @@ export default function Avatar({
         avatar.position.add(direction);
         setAvatarPos([avatar.position.x, avatar.position.y, avatar.position.z]);
 
-        // Third-person camera logic with yaw/pitch
         const offset = new THREE.Vector3(0, 3, 7);
         const rot = new THREE.Euler(pitch.current, yaw.current, 0, 'YXZ');
         offset.applyEuler(rot);
-        offset.y += 3; // elevate above avatar
+        offset.y += 3; 
 
         const cameraTarget = avatar.position.clone();
         const cameraPosition = cameraTarget.clone().add(offset);
@@ -114,7 +115,7 @@ export default function Avatar({
     });
 
     return (
-        <group ref={avatarRef} position={position} scale={[1, 1, 1]}>
+        <group ref={avatarRef} position={position} scale={[1, 1, 1]} onContextMenu={onContextMenu}>
             <mesh position={[0, 1, 0]}>
                 <capsuleGeometry args={[0.5, 1.5, 4, 8]} />
                 <meshStandardMaterial color="orange" />

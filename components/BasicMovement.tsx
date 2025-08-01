@@ -64,7 +64,7 @@ export default function BasicMovement() {
   }, [gl])
 
   useFrame((_state, delta) => {
-    const speed = 5
+    const speed = 50
     direction.current.set(0, 0, 0)
     if (keys.current['KeyS']) direction.current.z -= 1
     if (keys.current['KeyW']) direction.current.z += 1
