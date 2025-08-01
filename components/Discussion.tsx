@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 
 
-const Chat = ({ title, bodyPlaceholder, inputPlaceholder, userTag }: { title: string, bodyPlaceholder: string, inputPlaceholder: string, userTag:string }) => {
+const Discussion = ({ title, bodyPlaceholder, inputPlaceholder, userTag }: { title: string, bodyPlaceholder: string, inputPlaceholder: string, userTag: string }) => {
     const [input, setInput] = useState<string>('');
     const [response, setResponse] = useState<string>('');
     const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -17,11 +17,11 @@ const Chat = ({ title, bodyPlaceholder, inputPlaceholder, userTag }: { title: st
         setInput('');
         setIsLoading(true);
         setResponse('');
-        
+
 
         async function checkServerOk() {
             try {
-                const res = await fetch("http://localhost:8000/okcheck");
+                const res = await fetch("http://localhost:8001/okcheck");
                 if (res.ok) {
                     const json = await res.json();
                     if (json.ok === true) {
@@ -44,13 +44,13 @@ const Chat = ({ title, bodyPlaceholder, inputPlaceholder, userTag }: { title: st
         if (isOk === true) {
             try {
 
-                const res = await fetch("http://localhost:8000/chat", {
+                const res = await fetch("http://localhost:8001/intelligence", {
                     method: "POST",
                     headers: {
                         //'Authorization': `Bearer ${token}`,
                         "Content-Type": "application/json"
                     },
-                    body: JSON.stringify({ prompt: input, max_tokens: 1000, tag: userTag })
+                    body: JSON.stringify({ prompt: input })
                 });
 
                 const text = await res.text();
@@ -105,11 +105,11 @@ const Chat = ({ title, bodyPlaceholder, inputPlaceholder, userTag }: { title: st
     };
 
     return (
-        <section id="chat" className="w-full pb-1 pt-1 c-space border-slateGray">
+        <section id="chat" className="w-full pb-7 pt-0 c-space border-slateGray">
             <div className="max-w-3xl mx-auto flex flex-col gap-6">
-                <h2 className="text-black mt-3 text-3xl font-semibold text-center">{title}</h2>
+                <h2 className="text-black mt-5 text-3xl font-semibold text-center">{title}</h2>
 
-                <div className="w-full min-h-[150px] bg-cyan-900 border-slateGray rounded-xl p-6 text-white text-lg transition-all duration-200">
+                <div className="max-h-70 overflow-y-auto w-full min-h-[150px] bg-cyan-900 border-slateGray rounded-xl p-6 text-white text-lg transition-all duration-200">
                     {response ? (
                         <p>{response}</p>
                     ) : (
@@ -118,8 +118,7 @@ const Chat = ({ title, bodyPlaceholder, inputPlaceholder, userTag }: { title: st
                 </div>
 
                 <form onSubmit={handleSubmit} className="flex items-center gap-4">
-                    <input
-                        type="text"
+                    <textarea
                         value={input}
                         onChange={(e) => setInput(e.target.value)}
                         placeholder={inputPlaceholder}
@@ -140,4 +139,4 @@ const Chat = ({ title, bodyPlaceholder, inputPlaceholder, userTag }: { title: st
     );
 };
 
-export default Chat;
+export default Discussion;
