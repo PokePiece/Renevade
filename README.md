@@ -2,7 +2,6 @@
 
 Renevade is a specialized realm within the **Webtrix**, designed to provide a more immersive, interactive, and customizable web experience. It expands upon the core functions of the Webtrix by introducing modular subsystems, advanced spatial interactions, and highly dynamic content layers. Built on top of the **Windmatrix**, it leverages high-bandwidth logical processing to handle dense, complex web data in real time.
 
-* * *
 
 ## 🌐 Overview
 
@@ -19,8 +18,6 @@ The Renevade acts as the **Hyper Webspace capital** of the Webtrix:
 
 Renevade bridges the **Physical Capital** and **Webspace Capital** of Webtrix, delivering a seamless, interactive interface that blends reality and virtual web intelligence.
 
-* * *
-
 ## 🔧 Features
 
 - **3D Immersive Web Interaction:** Navigate a fully spatialized web environment with interactive nodes and content objects.
@@ -36,7 +33,6 @@ Renevade bridges the **Physical Capital** and **Webspace Capital** of Webtrix, d
 - **Persistent State:** Maintains session continuity for both users and AI agents across interactive sessions.
     
 
-* * *
 
 ## 🛠️ Technology Stack
 
@@ -57,7 +53,6 @@ Renevade bridges the **Physical Capital** and **Webspace Capital** of Webtrix, d
 - **Serverless Endpoints:** Vercel or cloud-hosted functions for distributed logic execution
     
 
-* * *
 
 ## 🚀 Usage
 
@@ -65,7 +60,6 @@ Renevade bridges the **Physical Capital** and **Webspace Capital** of Webtrix, d
 
 Access the app at: http://localhost:3000
 
-* * *
 
 ## 🧠 Architecture
 
@@ -84,19 +78,17 @@ Access the app at: http://localhost:3000
     - Immersive UI overlays
         
 
-* * *
 
 ## 📜 License
 
 Licensed under the MIT License.
 
-* * *
 
 ## ✍️ Author
 
 Developed by Dillon Carey  
 https://dilloncarey.com
 
-* * *
+***
 
 Renevade transforms the Webtrix from a spatial map into a fully realized hyper-web capital, blending real-time AI, immersive 3D navigation, and modular subsystem logic for the next generation of interactive web experiences.Server for the Webtrix, hosted to store and embody core intelligence platforms.
